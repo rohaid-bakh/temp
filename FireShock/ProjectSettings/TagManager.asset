@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Lava
+  - Ground
+  - Wood_1
+  - Wood_2
   layers:
   - Default
   - TransparentFX
