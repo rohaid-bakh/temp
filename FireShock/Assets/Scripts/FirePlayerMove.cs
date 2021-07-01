@@ -10,11 +10,15 @@ public class FirePlayerMove : MonoBehaviour
     Animator animate;
 
     // Fireballs yum
-    //[Header("Fireballs")]
-    //public GameObject fireSpawn;
-    //public List<GameObject> fires = new List<GameObject>();
-    //private int firesMax = 3; // feel free to set whatever number you want
-    //public int firesNum;
+    [Header("Fireballs")]
+    public GameObject fireSpawn;
+    public List<GameObject> fires = new List<GameObject>();
+    private int firesMax = 3; // feel free to set whatever number you want
+    public int firesNum;
+    public int shootSpeed;
+    public bool canShoot;
+    public float cooldownTime;
+    private float cooldownTimeMax = 300f;
 
     // Header velocity input
 
@@ -45,6 +49,7 @@ public class FirePlayerMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        firesNum = firesMax;
         mJumps = jumps;
         rb = GetComponent<Rigidbody2D>();
         animate = GetComponent<Animator>();
@@ -77,18 +82,42 @@ public class FirePlayerMove : MonoBehaviour
         }
 
         // Make the player use action using the G key
-        if (Input.GetKey(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.G) && firesNum > 0)
         {
-            //Action();
+            Action();
+            firesNum--;
+        }
+
+        // limit fireball
+        if (firesNum == 0)
+        {
+            canShoot = false;
+            Cooldown();
         }
 
         // Animation void here
         AnimationUpdate();
+
         // RigidBody move
         rb.MovePosition(transform.position + moveSpeed * Time.deltaTime);
         
     }
 
+    // cooldown for fire
+    public void Cooldown()
+    {
+        if (cooldownTime <= cooldownTimeMax)
+        {
+            cooldownTime++;
+        }
+        if (cooldownTime == cooldownTimeMax)
+        {
+            firesNum = firesMax;
+            cooldownTime = 0f;
+            canShoot = true;
+        }
+    }
+    
     // jump code (Y has been set to 8. Feel free to change)
     public void Jump()
     {
@@ -100,10 +129,23 @@ public class FirePlayerMove : MonoBehaviour
     }
 
     // action code
-    //public void Action()
-    //{
+    public void Action()
+    {
+       // call FireMove script
        
-    //}
+        Debug.Log("First Line");
+        GameObject f = Instantiate(fireSpawn, transform.position, transform.rotation);
+        Debug.Log("Second Line");
+        f.GetComponent<Rigidbody2D>().AddRelativeForce (new Vector3 (0, 0, 6));
+        Debug.Log("Third Line");
+        fires.Add(f);
+        Debug.Log("Fourth Line");
+        f.GetComponent<FireScript>().playerWhoDroppedMe = this;
+        Debug.Log("Fifth Line");
+        
+        canShoot = true;
+        Debug.Log("Sixth Line");
+    }
 
     // animation code
     public void AnimationUpdate()

@@ -8,6 +8,8 @@ TagManager:
   - Ground
   - Wood_1
   - Wood_2
+  - Lock_1
+  - 1
   layers:
   - Default
   - TransparentFX
