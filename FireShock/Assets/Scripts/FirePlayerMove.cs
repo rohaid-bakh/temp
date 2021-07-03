@@ -12,12 +12,12 @@ public class FirePlayerMove : MonoBehaviour
     // Fireballs yum
     [Header("Fireballs")]
     public GameObject fireSpawn;
-    public List<GameObject> fires = new List<GameObject>();
+    public List<GameObject> fires;
     private int firesMax = 3; // feel free to set whatever number you want
     public int firesNum;
     public int shootSpeed;
     public bool canShoot;
-    public float cooldownTime;
+    public float cooldownTime = 0f;
     private float cooldownTimeMax = 300f;
 
     // Header velocity input
@@ -43,12 +43,18 @@ public class FirePlayerMove : MonoBehaviour
     public bool Run_Left;
     public bool Run_Right;
 
+    //Facing left or right? this is for shooting
+    [Header("Left or Right?")]
+    public bool Left;
+    public bool Right;
+
     // Sounds header
     //[Header("Sounds Setting")]
 
     // Start is called before the first frame update
     void Start()
     {
+        fires = new List<GameObject>();
         firesNum = firesMax;
         mJumps = jumps;
         rb = GetComponent<Rigidbody2D>();
@@ -60,6 +66,7 @@ public class FirePlayerMove : MonoBehaviour
     {
         // horizontal float
         float horizontal = 1;
+
         // Moving the player using the A S D keys
 
         // left
@@ -86,6 +93,7 @@ public class FirePlayerMove : MonoBehaviour
         {
             Action();
             firesNum--;
+            ClearList();
         }
 
         // limit fireball
@@ -103,7 +111,7 @@ public class FirePlayerMove : MonoBehaviour
         
     }
 
-    // cooldown for fire
+    // cooldown in order to shoot again
     public void Cooldown()
     {
         if (cooldownTime <= cooldownTimeMax)
@@ -134,9 +142,9 @@ public class FirePlayerMove : MonoBehaviour
        // call FireMove script
        
         Debug.Log("First Line");
-        GameObject f = Instantiate(fireSpawn, transform.position, transform.rotation);
+        GameObject f = Instantiate(fireSpawn, transform.position, Quaternion.identity);
         Debug.Log("Second Line");
-        f.GetComponent<Rigidbody2D>().AddRelativeForce (new Vector3 (0, 0, 6));
+        f.GetComponent<Rigidbody2D>().AddForce(transform.right * shootSpeed);
         Debug.Log("Third Line");
         fires.Add(f);
         Debug.Log("Fourth Line");
@@ -145,6 +153,16 @@ public class FirePlayerMove : MonoBehaviour
         
         canShoot = true;
         Debug.Log("Sixth Line");
+    }
+
+    // remove list?
+    public void ClearList()
+    {
+        for (var i = fires.Count -1; i > -1; i--)
+        {
+            if (fires[i] == null)
+                fires.RemoveAt(i);
+        }
     }
 
     // animation code

@@ -76,7 +76,7 @@ public class ThunderPlayerMove : MonoBehaviour
             Jump();
         }
 
-        // Make the player use action using the G key
+        // Make the player use action using the Jump key
         if (Input.GetButtonDown("Jump"))
         {
             //Action();

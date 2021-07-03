@@ -5,25 +5,31 @@ using UnityEngine;
 public class FireScript : MonoBehaviour
 {
     // settings
-    [Header("Setrings")]
-    public float fireLimit = 3f; // last for 3 secs
+    [Header("Settings")]
+    public float fireLimit = 5f;
 
+    // physics
+    Vector3 vel;
 
     // player script here
     public FirePlayerMove playerWhoDroppedMe;
+    //public FirePlayerMove duration;
 
-    // no Start
+    private void Start()
+    {
+        FireDuration();
+    }
 
     // Update is called once per frame
     void Update()
     {
-        FireDuration();
+
+        GetComponent<Rigidbody2D>().MovePosition(transform.position + vel * Time.deltaTime);
     }
 
     // fire death by duration
     public void FireDuration()
     {
-        playerWhoDroppedMe.fires.Remove(gameObject);
         Destroy(gameObject, fireLimit);
     }
 
