@@ -24,7 +24,9 @@ public class FireScript : MonoBehaviour
     void Update()
     {
 
-        GetComponent<Rigidbody2D>().MovePosition(transform.position + vel * Time.deltaTime);
+        // Commented out because it doesn't allow for the force to be applied 
+        
+        // GetComponent<Rigidbody2D>().MovePosition(transform.position + vel * Time.deltaTime);
     }
 
     // fire death by duration
@@ -37,10 +39,18 @@ public class FireScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D c)
     {
+        if (c.tag == "Wood_1"){
+            Destroy(c.gameObject);
+        }
         if (c.CompareTag("Wall"))
         {
             FireDeath();
         }
+        if (c.tag != "Player") {
+             playerWhoDroppedMe.fires.Remove(gameObject);
+             Destroy(gameObject);
+        }
+       
     }
 
     public void FireDeath()
@@ -48,4 +58,5 @@ public class FireScript : MonoBehaviour
         playerWhoDroppedMe.fires.Remove(gameObject);
         Destroy(gameObject);
     }
+
 }

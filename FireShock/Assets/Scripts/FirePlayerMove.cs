@@ -45,8 +45,8 @@ public class FirePlayerMove : MonoBehaviour
 
     //Facing left or right? this is for shooting
     [Header("Left or Right?")]
-    public bool Left;
-    public bool Right;
+    public bool Left = true;
+
 
     // Sounds header
     //[Header("Sounds Setting")]
@@ -73,12 +73,16 @@ public class FirePlayerMove : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
         {
             transform.position += Vector3.left * horizontal *speed * Time.deltaTime;
+            Left = true;
+        
         }
 
         // right 
         if (Input.GetKey(KeyCode.D))
         {
             transform.position += Vector3.right * horizontal * speed * Time.deltaTime;
+            Left = false;
+
         }
 
         // Make the player jump using the W key
@@ -140,19 +144,15 @@ public class FirePlayerMove : MonoBehaviour
     public void Action()
     {
        // call FireMove script
-       
-        Debug.Log("First Line");
         GameObject f = Instantiate(fireSpawn, transform.position, Quaternion.identity);
-        Debug.Log("Second Line");
-        f.GetComponent<Rigidbody2D>().AddForce(transform.right * shootSpeed);
-        Debug.Log("Third Line");
+        if (Left){ 
+             f.GetComponent<Rigidbody2D>().AddForce(-transform.right * shootSpeed , ForceMode2D.Impulse);
+        } else {
+             f.GetComponent<Rigidbody2D>().AddForce(transform.right * shootSpeed , ForceMode2D.Impulse);
+        }
         fires.Add(f);
-        Debug.Log("Fourth Line");
         f.GetComponent<FireScript>().playerWhoDroppedMe = this;
-        Debug.Log("Fifth Line");
-        
         canShoot = true;
-        Debug.Log("Sixth Line");
     }
 
     // remove list?
