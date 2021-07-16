@@ -13,12 +13,9 @@ public class FirePlayerMove : MonoBehaviour
     [Header("Fireballs")]
     public GameObject fireSpawn;
     public List<GameObject> fires;
-    private int firesMax = 3; // feel free to set whatever number you want
-    public int firesNum;
     public int shootSpeed;
     public bool canShoot;
-    public float cooldownTime = 0f;
-    private float cooldownTimeMax = 300f;
+    public float fireCooldown;
 
     // Header velocity input
 
@@ -55,7 +52,6 @@ public class FirePlayerMove : MonoBehaviour
     void Start()
     {
         fires = new List<GameObject>();
-        firesNum = firesMax;
         mJumps = jumps;
         rb = GetComponent<Rigidbody2D>();
         animate = GetComponent<Animator>();
@@ -93,18 +89,20 @@ public class FirePlayerMove : MonoBehaviour
         }
 
         // Make the player use action using the G key
-        if (Input.GetKeyDown(KeyCode.G) && firesNum > 0)
+        if (Input.GetKeyDown(KeyCode.G) && canShoot)
         {
+            // the prefab and the list clearing
             Action();
-            firesNum--;
             ClearList();
+            // the cooldown after the bullet has been shot
+            fireCooldown = Time.time + 0.50f;
+            canShoot = false;
         }
 
-        // limit fireball
-        if (firesNum == 0)
+        // cooldown done
+        if (!canShoot && Time.time > fireCooldown)
         {
-            canShoot = false;
-            Cooldown();
+            canShoot = true;
         }
 
         // Animation void here
@@ -113,21 +111,6 @@ public class FirePlayerMove : MonoBehaviour
         // RigidBody move
         rb.MovePosition(transform.position + moveSpeed * Time.deltaTime);
         
-    }
-
-    // cooldown in order to shoot again
-    public void Cooldown()
-    {
-        if (cooldownTime <= cooldownTimeMax)
-        {
-            cooldownTime++;
-        }
-        if (cooldownTime == cooldownTimeMax)
-        {
-            firesNum = firesMax;
-            cooldownTime = 0f;
-            canShoot = true;
-        }
     }
     
     // jump code (Y has been set to 8. Feel free to change)
@@ -152,7 +135,6 @@ public class FirePlayerMove : MonoBehaviour
         }
         fires.Add(f);
         f.GetComponent<FireScript>().playerWhoDroppedMe = this;
-        canShoot = true;
     }
 
     // remove list?
