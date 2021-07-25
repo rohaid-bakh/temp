@@ -10,6 +10,12 @@ TagManager:
   - Wood_2
   - Lock_1
   - 1
+  - Light_2
+  - Light_1
+  - Light_3
+  - 2
+  - 3
+  - Light_4
   layers:
   - Default
   - TransparentFX

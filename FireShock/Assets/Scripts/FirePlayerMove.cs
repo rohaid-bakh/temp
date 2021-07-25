@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class FirePlayerMove : MonoBehaviour
 {
     // Movement, animator, velocity, and physics for the player
@@ -64,6 +64,10 @@ public class FirePlayerMove : MonoBehaviour
         float horizontal = 1;
 
         // Moving the player using the A S D keys
+
+        if (Input.GetKeyDown(KeyCode.R)) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
 
         // left
         if (Input.GetKey(KeyCode.A))

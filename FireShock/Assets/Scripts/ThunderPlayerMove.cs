@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ThunderPlayerMove : MonoBehaviour
 {
@@ -10,12 +11,13 @@ public class ThunderPlayerMove : MonoBehaviour
     Animator animate;
 
     // Thunder
-    //[Header("Thunder")]
-    //public GameObject thunderSpawn;
-    //public List<GameObject> thunders = new List<GameObject>();
-    //private int thundersMax = 3; // feel free to set whatever number you want
-    //public int thundersNum;
-
+    [Header("Thunder")]
+    public GameObject thunderSpawn;
+    public List<GameObject> thunders = new List<GameObject>();
+    public int shootSpeed;
+    public bool canShoot; 
+    public float lightCooldown; // feel free to set whatever number you want
+  
     // Header velocity input
 
     [Header("Speed")]
@@ -38,6 +40,11 @@ public class ThunderPlayerMove : MonoBehaviour
     public bool Jump_Right;
     public bool Run_Left;
     public bool Run_Right;
+    
+    //Facing left or right? this is for shooting
+    [Header("Left or Right?")]
+    public bool Left = true;
+
 
     // Sounds header
     //[Header("Sounds Setting")]
@@ -45,6 +52,7 @@ public class ThunderPlayerMove : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        
         mJumps = jumps;
         rb = GetComponent<Rigidbody2D>();
         animate = GetComponent<Animator>();
@@ -57,16 +65,22 @@ public class ThunderPlayerMove : MonoBehaviour
         float horizontal = 1;
         // Moving the player using the arrow keys
 
-        // left
+        
+        if (Input.GetKeyDown(KeyCode.N)) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             transform.position += Vector3.left * horizontal * speed * Time.deltaTime;
+            Left = true;
         }
 
         // right
         if (Input.GetKey(KeyCode.RightArrow))
         {
             transform.position += Vector3.right * horizontal * speed * Time.deltaTime;
+            Left = false;
         }
 
         // Make the player jump using the up arrow
@@ -77,11 +91,20 @@ public class ThunderPlayerMove : MonoBehaviour
         }
 
         // Make the player use action using the Jump key
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetKeyDown(KeyCode.Space) && canShoot)
         {
+            Debug.Log("insideJumpShoot");
+            Action();
+            ClearList();
+
+            lightCooldown = Time.time + 0.50f;
+            canShoot = false;
             //Action();
         }
 
+        if (!canShoot && Time.time > lightCooldown) {
+            canShoot = true;
+        }
         // Animation void here
         AnimationUpdate();
         // RigidBody move
@@ -100,10 +123,26 @@ public class ThunderPlayerMove : MonoBehaviour
     }
 
     // action code
-    //public void Action()
-    //{
+    public void Action()
+    {
+        GameObject f = Instantiate(thunderSpawn, transform.position, Quaternion.identity);
+        if (Left){ 
+             f.GetComponent<Rigidbody2D>().AddForce(-transform.right * shootSpeed , ForceMode2D.Impulse);
+        } else {
+             f.GetComponent<Rigidbody2D>().AddForce(transform.right * shootSpeed , ForceMode2D.Impulse);
+        }
+        thunders.Add(f);
+        f.GetComponent<ThunderScript>().playerWhoDroppedMe = this;
+    }
 
-    //}
+ public void ClearList()
+    {
+        for (var i = thunders.Count -1; i > -1; i--)
+        {
+            if (thunders[i] == null)
+                thunders.RemoveAt(i);
+        }
+    }
 
     // animation code
     public void AnimationUpdate()
