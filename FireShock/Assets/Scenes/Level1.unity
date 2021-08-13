@@ -18371,6 +18371,8 @@ GameObject:
   - component: {fileID: 865192102}
   - component: {fileID: 865192103}
   - component: {fileID: 865192104}
+  - component: {fileID: 865192105}
+  - component: {fileID: 865192106}
   m_Layer: 0
   m_Name: strange_door_opening_anim_strip_14_0
   m_TagString: Light_1
@@ -18386,7 +18388,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 865192101}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.55, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1616431312}
@@ -18470,6 +18472,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2415504, y: 3.4444966}
   m_EdgeRadius: 0
+--- !u!95 &865192105
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 865192101}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 11a5a405cc512234e829e785fc84671e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &865192106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 865192101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f87596e613407c5489b0601719e1bd36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &889346551
 GameObject:
   m_ObjectHideFlags: 0
@@ -20440,7 +20473,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1573672358}
   - component: {fileID: 1573672359}
-  - component: {fileID: 1573672361}
   - component: {fileID: 1573672363}
   - component: {fileID: 1573672362}
   - component: {fileID: 1573672360}
@@ -20530,18 +20562,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thunderSpawn: {fileID: 6854534301810353200, guid: f191bd80454c70b42aed667a824eef9c, type: 3}
---- !u!114 &1573672361
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1573672357}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a890edb1a0328048ae8b5af75b3e420, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!70 &1573672362
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -20608,7 +20628,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1616431311}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.2477856, y: 2.86, z: -2}
+  m_LocalPosition: {x: 5.2477856, y: 6.46, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 865192102}
@@ -23052,18 +23072,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lightning
       objectReference: {fileID: 0}
-    - target: {fileID: 6630789831711169145, guid: 73444bc6e3e6d834aa4e816fc000adc4, type: 3}
-      propertyPath: canShoot
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6630789831711169145, guid: 73444bc6e3e6d834aa4e816fc000adc4, type: 3}
-      propertyPath: shootSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 6630789831711169145, guid: 73444bc6e3e6d834aa4e816fc000adc4, type: 3}
-      propertyPath: thunderSpawn
-      value: 
-      objectReference: {fileID: 6854534301810353200, guid: f191bd80454c70b42aed667a824eef9c, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 73444bc6e3e6d834aa4e816fc000adc4, type: 3}
 --- !u!1001 &6739961712416203377
@@ -23083,11 +23091,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6739961712613783573, guid: e8171741825f9914c8d8eedaa2f33f31, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.73
+      value: -16.64
       objectReference: {fileID: 0}
     - target: {fileID: 6739961712613783573, guid: e8171741825f9914c8d8eedaa2f33f31, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.31
+      value: 5.5
       objectReference: {fileID: 0}
     - target: {fileID: 6739961712613783573, guid: e8171741825f9914c8d8eedaa2f33f31, type: 3}
       propertyPath: m_LocalPosition.z
@@ -23120,22 +23128,6 @@ PrefabInstance:
     - target: {fileID: 6739961712613783573, guid: e8171741825f9914c8d8eedaa2f33f31, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6739961712613783577, guid: e8171741825f9914c8d8eedaa2f33f31, type: 3}
-      propertyPath: canShoot
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6739961712613783577, guid: e8171741825f9914c8d8eedaa2f33f31, type: 3}
-      propertyPath: shootSpeed
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 6739961712613783577, guid: e8171741825f9914c8d8eedaa2f33f31, type: 3}
-      propertyPath: cooldownTime
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6739961712613783577, guid: e8171741825f9914c8d8eedaa2f33f31, type: 3}
-      propertyPath: DelayBetweenFire
-      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8171741825f9914c8d8eedaa2f33f31, type: 3}

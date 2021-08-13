@@ -7,7 +7,7 @@ public class FirePlayerMove : MonoBehaviour
     // Movement, animator, velocity, and physics for the player
     Rigidbody2D rb;
     Vector3 moveSpeed;
-    Animator animate;
+    public Animator animate;
 
     // Fireballs yum
     [Header("Fireballs")]
@@ -22,6 +22,8 @@ public class FirePlayerMove : MonoBehaviour
     [Header("Speed")]
     public float speed;
 
+    [Header("Brackeys Tutorial")]
+    float horizontalMove = 0f;
     // Header onGround input
     [Header("Is the object on the ground?")]
     public bool onGround;
@@ -44,55 +46,27 @@ public class FirePlayerMove : MonoBehaviour
     [Header("Left or Right?")]
     public bool Left = true;
 
+    [Header("Character Controller")]
+    public CharacterController2D controller;
 
     // Sounds header
-    //[Header("Sounds Setting")]
 
+    //[Header("Sounds Setting")]
     // Start is called before the first frame update
     void Start()
     {
         fires = new List<GameObject>();
         mJumps = jumps;
         rb = GetComponent<Rigidbody2D>();
-        animate = GetComponent<Animator>();
+        // animate = GetComponent<Animator>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        // horizontal float
-        float horizontal = 1;
-
-        // Moving the player using the A S D keys
-
-        if (Input.GetKeyDown(KeyCode.R)) {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
-
-        // left
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.position += Vector3.left * horizontal *speed * Time.deltaTime;
-            Left = true;
+  
+    void Update() {
         
-        }
-
-        // right 
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.position += Vector3.right * horizontal * speed * Time.deltaTime;
-            Left = false;
-
-        }
-
-        // Make the player jump using the W key
-
-        if (Input.GetKey(KeyCode.W) && jumps > 0)
-        {
-            Jump();
-        }
-
-        // Make the player use action using the G key
+        horizontalMove = Input.GetAxisRaw("Horizontal") * speed;
+        animate.SetFloat("Speed", Mathf.Abs(horizontalMove));
         if (Input.GetKeyDown(KeyCode.G) && canShoot)
         {
             // the prefab and the list clearing
@@ -103,29 +77,50 @@ public class FirePlayerMove : MonoBehaviour
             canShoot = false;
         }
 
-        // cooldown done
         if (!canShoot && Time.time > fireCooldown)
         {
             canShoot = true;
         }
 
-        // Animation void here
-        AnimationUpdate();
-
-        // RigidBody move
-        rb.MovePosition(transform.position + moveSpeed * Time.deltaTime);
+         if (Input.GetKey(KeyCode.W) && jumps > 0)
+        {
+            Jump();
+            animate.SetBool("isJumping", true);
+        }
         
+         if (Input.GetKeyDown(KeyCode.R)) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+        
+
     }
-    
-    // jump code (Y has been set to 8. Feel free to change)
-    public void Jump()
+
+     public void Jump()
     {
         // Animation void here
         //AnimationUpdate();
-        rb.velocity = new Vector3(0, 8, 0);
+        rb.velocity = new Vector3(0, 10, 0);
         onGround = false;
         jumps--;
     }
+
+    void FixedUpdate () {
+        if (horizontalMove < 0 ) { 
+            Left = true;
+        }else if (horizontalMove > 0) {
+            Left = false;
+        }
+        controller.Move(horizontalMove * Time.fixedDeltaTime ,false, false);
+    }
+    // jump code (Y has been set to 8. Feel free to change)
+    // public void Jump()
+    // {
+    //     // Animation void here
+    //     //AnimationUpdate();
+    //     rb.velocity = new Vector3(0, 8, 0);
+    //     onGround = false;
+    //     jumps--;
+    // }
 
     // action code
     public void Action()
@@ -141,7 +136,7 @@ public class FirePlayerMove : MonoBehaviour
         f.GetComponent<FireScript>().playerWhoDroppedMe = this;
     }
 
-    // remove list?
+    // // remove list?
     public void ClearList()
     {
         for (var i = fires.Count -1; i > -1; i--)
@@ -151,69 +146,22 @@ public class FirePlayerMove : MonoBehaviour
         }
     }
 
-    // animation code
-    public void AnimationUpdate()
+      private void OnCollisionEnter2D(Collision2D col)
     {
-        // flip to the left
-        if (moveSpeed.x < 0)
-        {
-            animate.SetBool("Run_Left", true);
-            animate.SetBool("Idle_Left", false);
-        }
-        else
-        {
-            animate.SetBool("Run_Left", false);
-            animate.SetBool("Idle_Left", true);
-
-        }
-        // flip to the right
-        if (moveSpeed.x > 0)
-        {
-            animate.SetBool("Run_Right", true);
-            animate.SetBool("Idle_Right", false);
-        }
-        else
-        {
-            animate.SetBool("Run_Right", false);
-            animate.SetBool("Idle_Right", true);
-        }
-        // jump to the left
-        if (moveSpeed.x < 0 && moveSpeed.y > 0)
-        {
-            animate.SetBool("Jump_Left", true);
-        }
-        else
-        {
-            animate.SetBool("Jump_Left", false);
-        }
-        // jump to the right
-        if (moveSpeed.x > 0 && moveSpeed.y > 0)
-        {
-            animate.SetBool("Jump_Right", true);
-        }
-        else
-        {
-            animate.SetBool("Jump_Right", false);
-        }
-    }
-    
-
-    // collision code
-    private void OnCollisionEnter2D (Collision2D col)
-    {
-        if(col.transform.CompareTag("Ground"))
+        if (col.transform.CompareTag("Ground"))
         {
             moveSpeed.y = 0;
             onGround = true;
             jumps = mJumps;
+            animate.SetBool("isJumping", false);
         }
+
     }
-    private void OnCollisionExit2D (Collision2D col)
+    private void OnCollisionExit2D(Collision2D col)
     {
         if (col.transform.CompareTag("Ground"))
         {
             onGround = false;
         }
     }
-
 }

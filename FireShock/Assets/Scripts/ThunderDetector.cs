@@ -11,7 +11,7 @@ public class ThunderDetector : MonoBehaviour
 
     private string tag ; 
     private int hitCount; 
-
+    private GameObject door;
     public GameObject thunderSpawn;
     // Start is called before the first frame update
     void Start()
@@ -26,14 +26,19 @@ public class ThunderDetector : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D c)
     {
         
-        Debug.Log(c.name);
+
         if (c.name == "LightningBolt(Clone)"){
-            Debug.Log("hit");
             hitCount++; 
         }
     
         if (hitCount == 3) {
-        Destroy(GameObject.FindWithTag("Light_" + tag));
+            if(tag == "1") {
+                door = GameObject.FindWithTag("Light_" + tag);
+                Animator open = door.GetComponent<Animator>();
+                open.SetBool("Destroyed", true);
+            } else { 
+                Destroy(GameObject.FindWithTag("Light_" + tag));
+            }
         }
     
         

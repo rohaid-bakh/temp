@@ -8,7 +8,7 @@ public class ThunderPlayerMove : MonoBehaviour
     // Movement, animator, velocity, and physics for the player
     Rigidbody2D rb;
     Vector3 moveSpeed;
-    Animator animate;
+    public Animator animate;
 
     // Thunder
     [Header("Thunder")]
@@ -22,6 +22,9 @@ public class ThunderPlayerMove : MonoBehaviour
 
     [Header("Speed")]
     public float speed;
+
+    [Header("Brackeys Tutorial")]
+    float horizontalMove = 0f;
 
     // Header onGround input
     [Header("Is the object on the ground?")]
@@ -48,21 +51,22 @@ public class ThunderPlayerMove : MonoBehaviour
 
     // Sounds header
     //[Header("Sounds Setting")]
-
+    [Header("Character Controller")]
+    public CharacterController2D controller;
     // Start is called before the first frame update
     void Start()
     {
         
         mJumps = jumps;
         rb = GetComponent<Rigidbody2D>();
-        animate = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
         // horizontal float
-        float horizontal = 1;
+         horizontalMove = Input.GetAxisRaw("Horizontal2") * speed;
+        animate.SetFloat("Speed", Mathf.Abs(horizontalMove));
         // Moving the player using the arrow keys
 
         
@@ -70,30 +74,18 @@ public class ThunderPlayerMove : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
         
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            transform.position += Vector3.left * horizontal * speed * Time.deltaTime;
-            Left = true;
-        }
-
-        // right
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            transform.position += Vector3.right * horizontal * speed * Time.deltaTime;
-            Left = false;
-        }
 
         // Make the player jump using the up arrow
 
         if (Input.GetKey(KeyCode.UpArrow) && jumps > 0)
         {
             Jump();
+            animate.SetBool("isJumping", true);
         }
 
         // Make the player use action using the Jump key
         if (Input.GetKeyDown(KeyCode.Space) && canShoot)
         {
-            Debug.Log("insideJumpShoot");
             Action();
             ClearList();
 
@@ -105,11 +97,15 @@ public class ThunderPlayerMove : MonoBehaviour
         if (!canShoot && Time.time > lightCooldown) {
             canShoot = true;
         }
-        // Animation void here
-        AnimationUpdate();
-        // RigidBody move
-        rb.MovePosition(transform.position + moveSpeed * Time.deltaTime);
 
+    }
+    void FixedUpdate () {
+        if (horizontalMove < 0 ) { 
+            Left = true;
+        }else if (horizontalMove > 0) {
+            Left = false;
+        }
+        controller.Move(horizontalMove * Time.fixedDeltaTime ,false, false);
     }
 
     // jump code (Y has been set to 8. Feel free to change)
@@ -144,51 +140,6 @@ public class ThunderPlayerMove : MonoBehaviour
         }
     }
 
-    // animation code
-    public void AnimationUpdate()
-    {
-        // flip to the left
-        if (moveSpeed.x < 0)
-        {
-            animate.SetBool("Run_Left", true);
-            animate.SetBool("Idle_Left", false);
-        }
-        else
-        {
-            animate.SetBool("Run_Left", false);
-            animate.SetBool("Idle_Left", true);
-
-        }
-        // flip to the right
-        if (moveSpeed.x > 0)
-        {
-            animate.SetBool("Run_Right", true);
-            animate.SetBool("Idle_Right", false);
-        }
-        else
-        {
-            animate.SetBool("Run_Right", false);
-            animate.SetBool("Idle_Right", true);
-        }
-        // jump to the left
-        if (moveSpeed.x < 0 && moveSpeed.y > 0)
-        {
-            animate.SetBool("Jump_Left", true);
-        }
-        else
-        {
-            animate.SetBool("Jump_Left", false);
-        }
-        // jump to the right
-        if (moveSpeed.x > 0 && moveSpeed.y > 0)
-        {
-            animate.SetBool("Jump_Right", true);
-        }
-        else
-        {
-            animate.SetBool("Jump_Right", false);
-        }
-    }
 
     // collision code
     private void OnCollisionEnter2D(Collision2D col)
@@ -198,11 +149,11 @@ public class ThunderPlayerMove : MonoBehaviour
             moveSpeed.y = 0;
             onGround = true;
             jumps = mJumps;
+             animate.SetBool("isJumping", false);
         }
 
         if(col.transform.CompareTag("Wood_1"))
         {
-            Debug.Log("Test1");
         }
     }
     private void OnCollisionExit2D(Collision2D col)

@@ -39,16 +39,8 @@ public class ThunderScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D c)
     {
-        // if (c.tag == "Wood_1"){
-        //     Destroy(c.gameObject);
-        // }
-        if (c.CompareTag("Wall"))
-        {
-            ThunderDeath();
-        }
         if (c.tag != "Player") {
-             playerWhoDroppedMe.thunders.Remove(gameObject);
-             Destroy(gameObject);
+            ThunderDeath();
         }
        
     }
